@@ -36,7 +36,7 @@ public class LoginInterfaceFormController {
             new Alert(Alert.AlertType.ERROR,
                     "Email must end with @gmail.com").show();
 
-        }else
+        }
 
 
     }

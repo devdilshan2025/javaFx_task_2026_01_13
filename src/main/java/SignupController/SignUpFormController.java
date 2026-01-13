@@ -1,9 +1,13 @@
 package SignupController;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+
+
 
 public class SignUpFormController {
 
@@ -31,11 +35,50 @@ public class SignUpFormController {
     @FXML
     void btnBacktoLoginOnAction(ActionEvent event) {
 
+
     }
 
     @FXML
     void btnRegisterOnAction(ActionEvent event) {
 
+        String firstName = txtfirstName.getText();
+        String lastName = txtLastName.getText();
+        String email = txtEmailAddres.getText();
+        String password = txtPassword.getText();
+        String rePassword = txtReenterPassword.getText();
+
+
+        if (!isValidGmail(email)) {
+            new Alert(Alert.AlertType.ERROR,
+                    "Email must end with @gmail.com").show();
+            return;
+
+        }
+
+        if (!password.equals(rePassword)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Password Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Password and Re-enter Password must match!");
+            alert.show();
+            return;
+        }
+
+
+
+
+
+
+
+
     }
+
+    private boolean isValidGmail(String email) {
+
+        return email != null && email.endsWith("@gmail.com");
+    }
+
+
+
 
 }
