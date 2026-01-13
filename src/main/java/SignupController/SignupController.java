@@ -10,24 +10,20 @@ public class SignupController implements SignUpservice {
 
 
     @Override
-    public void addausers() {
-
-    }
-
-    @Override
-    public void addausers(String fname, String LName, String Email, String password) throws SQLException {
+    public void addausers(String fName, String lName, String email, String password) throws SQLException {
 
         Connection connection = DBConnection.getInstance().getConnection();
-        String sql = "INSERT INTO users VALUES(?,?,?,?)";
+        String sql = "INSERT INTO users (first_name,last_name,email,password) VALUES(?,?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-        preparedStatement.setObject(1,fname);
-        preparedStatement.setObject(2,LName);
-        preparedStatement.setObject(3,Email);
+        preparedStatement.setObject(1,fName);
+        preparedStatement.setObject(2,lName);
+        preparedStatement.setObject(3,email);
         preparedStatement.setObject(4,password);
 
 
         preparedStatement.executeUpdate();
+
 
     }
 }
