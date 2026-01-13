@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import util.PasswordUtil;
+
 
 import java.sql.SQLException;
 
@@ -67,8 +69,10 @@ public class SignUpFormController {
             return;
         }
 
+         String pass = txtPassword.getText();
+         String hashPassword = PasswordUtil.hashPassword(pass);
 
-        signUpservice.addausers(txtfirstName.getText(),txtLastName.getText(),txtEmailAddres.getText(),txtPassword.getText());
+         signUpservice.addausers(txtfirstName.getText(),txtLastName.getText(),txtEmailAddres.getText(),hashPassword);
 
 
 
