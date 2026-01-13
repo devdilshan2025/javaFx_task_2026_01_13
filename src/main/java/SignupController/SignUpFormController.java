@@ -7,9 +7,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.sql.SQLException;
 
 
 public class SignUpFormController {
+
+    SignUpservice signUpservice = new SignupController();
 
     @FXML
     private Button btnBacktoLogin;
@@ -33,13 +36,13 @@ public class SignUpFormController {
     private TextField txtfirstName;
 
     @FXML
-    void btnBacktoLoginOnAction(ActionEvent event) {
+    void btnBacktoLoginOnAction(ActionEvent event) throws SQLException {
 
-
+     signUpservice.addausers(txtfirstName.getText(),txtLastName.getText(),txtEmailAddres.getText(),txtPassword.getText());
     }
 
     @FXML
-    void btnRegisterOnAction(ActionEvent event) {
+    void btnRegisterOnAction(ActionEvent event) throws SQLException {
 
         String firstName = txtfirstName.getText();
         String lastName = txtLastName.getText();
@@ -65,7 +68,7 @@ public class SignUpFormController {
         }
 
 
-
+        signUpservice.addausers(txtfirstName.getText(),txtLastName.getText(),txtEmailAddres.getText(),txtPassword.getText());
 
 
 

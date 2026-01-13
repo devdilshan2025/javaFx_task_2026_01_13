@@ -11,7 +11,7 @@ public class DBConnection {
 
 
     private DBConnection() throws SQLException {
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Pharmacy", "root", "1234");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/userAuthendication", "root", "1234");
     }
 
     public Connection getConnection(){

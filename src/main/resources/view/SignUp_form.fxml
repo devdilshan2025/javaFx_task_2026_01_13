@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SignupController.SignUpFormController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: EFE1B5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SignupController.SignUpFormController">
    <children>
       <Label layoutX="249.0" layoutY="14.0" text="Sign Up">
          <font>
@@ -24,7 +24,7 @@
       <Label layoutX="150.0" layoutY="203.0" text="Password" />
       <TextField fx:id="txtReenterPassword" layoutX="264.0" layoutY="248.0" />
       <Label layoutX="150.0" layoutY="252.0" text="Re-enter Password" />
-      <Button fx:id="btnRegister" layoutX="157.0" layoutY="311.0" mnemonicParsing="false" onAction="#btnRegisterOnAction" text="Register" />
-      <Button fx:id="btnBacktoLogin" layoutX="316.0" layoutY="311.0" mnemonicParsing="false" onAction="#btnBacktoLoginOnAction" text="Back to Login" />
+      <Button fx:id="btnRegister" layoutX="157.0" layoutY="311.0" mnemonicParsing="false" onAction="#btnRegisterOnAction" style="-fx-background-color: B153D7;" text="Register" />
+      <Button fx:id="btnBacktoLogin" layoutX="316.0" layoutY="311.0" mnemonicParsing="false" onAction="#btnBacktoLoginOnAction" style="-fx-background-color: B153D7;" text="Back to Login" />
    </children>
 </AnchorPane>
