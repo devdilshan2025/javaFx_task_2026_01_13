@@ -3,18 +3,23 @@ package SignupController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import util.PasswordUtil;
 
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 
 public class SignUpFormController {
 
     SignUpservice signUpservice = new SignupController();
+    private Stage stage = new Stage();
 
     @FXML
     private Button btnBacktoLogin;
@@ -40,7 +45,12 @@ public class SignUpFormController {
     @FXML
     void btnBacktoLoginOnAction(ActionEvent event) throws SQLException {
 
-     signUpservice.addausers(txtfirstName.getText(),txtLastName.getText(),txtEmailAddres.getText(),txtPassword.getText());
+        try {
+            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/LoginInterface_form.fxml"))));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        stage.show();
     }
 
     @FXML
