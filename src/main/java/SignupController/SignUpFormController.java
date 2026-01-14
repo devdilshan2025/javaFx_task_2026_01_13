@@ -1,6 +1,5 @@
 package SignupController;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,14 +10,14 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import util.PasswordUtil;
 
-
 import java.io.IOException;
 import java.sql.SQLException;
 
-
 public class SignUpFormController {
 
-    SignUpservice signUpservice = new SignupController();
+
+    private SignUpservice signUpservice = new SignupController();
+
     private Stage stage = new Stage();
 
     @FXML
@@ -42,19 +41,23 @@ public class SignUpFormController {
     @FXML
     private TextField txtfirstName;
 
+    // ================= BACK TO LOGIN =================
     @FXML
-    void btnBacktoLoginOnAction(ActionEvent event) throws SQLException {
-
+    void btnBacktoLoginOnAction(ActionEvent event) {
         try {
-            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/LoginInterface_form.fxml"))));
+            stage.setScene(new Scene(
+                    FXMLLoader.load(getClass().getResource("/view/LoginInterface_form.fxml"))
+            ));
+            stage.show();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            showAlert("System Error", "Unable to load login form");
         }
-        stage.show();
     }
 
+    // ================= REGISTER =================
     @FXML
-    void btnRegisterOnAction(ActionEvent event) throws SQLException {
+    void btnRegisterOnAction(ActionEvent event) {
 
         String firstName = txtfirstName.getText();
         String lastName = txtLastName.getText();
@@ -62,40 +65,84 @@ public class SignUpFormController {
         String password = txtPassword.getText();
         String rePassword = txtReenterPassword.getText();
 
+        //  Empty field validation
+        if (firstName == null || firstName.trim().isEmpty() ||
+                lastName == null || lastName.trim().isEmpty() ||
+                email == null || email.trim().isEmpty() ||
+                password == null || password.isEmpty() ||
+                rePassword == null || rePassword.isEmpty()) {
 
+            showAlert("Validation Error", "All fields are required");
+            return;
+        }
+
+        // Email validation
         if (!isValidGmail(email)) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Email must end with @gmail.com").show();
+            showAlert("Invalid Email", "Email must end with @gmail.com");
             return;
-
         }
 
+        //  Password match validation
         if (!password.equals(rePassword)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Password Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Password and Re-enter Password must match!");
-            alert.show();
+            showAlert(
+                    "Password Error",
+                    "Password and Re-enter Password must match!"
+            );
             return;
         }
 
-         String pass = txtPassword.getText();
-         String hashPassword = PasswordUtil.hashPassword(pass);
+        //  Password strength validation (FIXED REGEX)
+        String passwordRegex =
+                "^(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,}$";
 
-         signUpservice.addausers(txtfirstName.getText(),txtLastName.getText(),txtEmailAddres.getText(),hashPassword);
+        if (!password.matches(passwordRegex)) {
+            showAlert(
+                    "Weak Password",
+                    "Password must contain:\n" +
+                            "- At least 8 characters\n" +
+                            "- One uppercase letter\n" +
+                            "- One lowercase letter\n" +
+                            "- One special character"
+            );
+            return;
+        }
 
+        //  Hash password
+        String hashedPassword = PasswordUtil.hashPassword(password);
 
+        // Save user
+        try {
+            signUpservice.addausers(
+                    firstName,
+                    lastName,
+                    email,
+                    hashedPassword
+            );
 
+            showAlert("Success", "Account created successfully!");
 
+            // Optional: go back to login
+            stage.setScene(new Scene(
+                    FXMLLoader.load(getClass().getResource("/view/LoginInterface_form.fxml"))
+            ));
+            stage.show();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Database Error", "Unable to create account");
+        }
     }
 
+    // ================= UTIL =================
     private boolean isValidGmail(String email) {
-
-        return email != null && email.endsWith("@gmail.com");
+        return email.endsWith("@gmail.com");
     }
 
-
-
-
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
