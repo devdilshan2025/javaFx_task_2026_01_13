@@ -19,6 +19,8 @@ import static util.PasswordUtil.hashPassword;
 
 public class LoginInterfaceFormController {
 
+    LoginService  loginService = new LoginInterfaceController();
+
     private Stage stage = new Stage();
 
     @FXML
@@ -106,14 +108,8 @@ public class LoginInterfaceFormController {
     // ================= DB =================
     public String getPasswordByEmail(String email) {
 
-        String sql = "SELECT password FROM users WHERE email = ?";
-
-        try (
-                Connection con = DBConnection.getInstance().getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)
-        ) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
+        try {
+            ResultSet rs = loginService.getPasswordByEmail(email);
 
             if (rs.next()) {
                 return rs.getString("password");
