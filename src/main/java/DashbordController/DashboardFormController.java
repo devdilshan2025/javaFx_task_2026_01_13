@@ -32,4 +32,8 @@ public class DashboardFormController {
 
     }
 
+    public void setFirstName(String firstName) {
+        lblfirstName.setText("Welcome, " + firstName);
+    }
+
 }

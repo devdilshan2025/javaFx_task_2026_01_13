@@ -1,5 +1,6 @@
 package LoginController;
 
+import DashbordController.DashboardFormController;
 import db.DBConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,9 +19,7 @@ import static util.PasswordUtil.hashPassword;
 
 public class LoginInterfaceFormController {
 
-    LoginService  loginService = new LoginInterfaceController();
-
-    private Stage stage = new Stage();
+    private LoginService loginService = new LoginInterfaceController();
 
     @FXML
     private Button btnSignIn;
@@ -42,45 +40,56 @@ public class LoginInterfaceFormController {
         String email = txtEmail.getText();
         String enteredPassword = txtPassword.getText();
 
-        //  Email empty check
+        // Email empty
         if (email == null || email.trim().isEmpty()) {
             showAlert("Validation Error", "Email cannot be empty");
             return;
         }
 
-        //  Email format check
+        // Email format
         if (!isValidGmail(email)) {
             showAlert("Invalid Email", "Email must end with @gmail.com");
             return;
         }
 
-        //  Password empty check
+        // Password empty
         if (enteredPassword == null || enteredPassword.trim().isEmpty()) {
             showAlert("Validation Error", "Password cannot be empty");
             return;
         }
 
-        //  Get password from DB
+        // DB password
         String dbHashedPassword = getPasswordByEmail(email);
-
         if (dbHashedPassword == null) {
             showAlert("User Not Found", "Please Sign Up first");
             return;
         }
 
-        //  Verify password
+        // Verify
         if (!verifyPassword(enteredPassword, dbHashedPassword)) {
             showAlert("Login Failed", "Invalid password");
             return;
         }
 
-        //  Login success → load dashboard
+        // Get first name
+        String firstName = getFirstNameByEmail(email);
+
+        // Load dashboard ONCE (CORRECT WAY)
         try {
-            stage.setScene(new Scene(
-                    FXMLLoader.load(getClass().getResource("/view/Dashboard_form.fxml"))
-            ));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/Dashboard_form.fxml")
+            );
+
+            Scene scene = new Scene(loader.load());
+
+            DashboardFormController controller = loader.getController();
+            controller.setFirstName(firstName);
+
+            Stage stage = (Stage) btnSignIn.getScene().getWindow();
+            stage.setScene(scene);
             stage.show();
-        } catch (IOException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
             showAlert("System Error", "Unable to load dashboard");
         }
@@ -90,29 +99,48 @@ public class LoginInterfaceFormController {
     @FXML
     void btnSignUpOnAction(ActionEvent event) {
         try {
+            Stage stage = (Stage) btnSignUp.getScene().getWindow();
             stage.setScene(new Scene(
                     FXMLLoader.load(getClass().getResource("/view/SignUp_form.fxml"))
             ));
             stage.show();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             showAlert("System Error", "Unable to load sign up form");
         }
     }
 
-    // ================= VALIDATIONS =================
+    // ================= VALIDATION =================
     private boolean isValidGmail(String email) {
         return email.endsWith("@gmail.com");
     }
 
     // ================= DB =================
-    public String getPasswordByEmail(String email) {
-
+    private String getPasswordByEmail(String email) {
         try {
             ResultSet rs = loginService.getPasswordByEmail(email);
-
             if (rs.next()) {
                 return rs.getString("password");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getFirstNameByEmail(String email) {
+
+        String sql = "SELECT first_name FROM users WHERE email = ?";
+
+        try (
+                Connection con = DBConnection.getInstance().getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)
+        ) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("first_name");
             }
 
         } catch (Exception e) {
@@ -131,7 +159,7 @@ public class LoginInterfaceFormController {
     }
 
     // ================= PASSWORD =================
-    public boolean verifyPassword(String entered, String storedHash) {
+    private boolean verifyPassword(String entered, String storedHash) {
         String enteredHash = hashPassword(entered);
         return enteredHash.equals(storedHash);
     }

@@ -5,15 +5,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: EFE1B5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="DashbordController.DashboardFormController">
    <children>
-      <Label layoutX="148.0" layoutY="117.0" prefHeight="35.0" prefWidth="187.0" text="Welcome">
+      <Label fx:id="lblfirstName" alignment="CENTER" contentDisplay="BOTTOM" layoutX="32.0" layoutY="137.0" prefHeight="53.0" prefWidth="531.0" style="-fx-background-color: 6E026F;" text="First Name">
          <font>
-            <Font size="36.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblfirstName" layoutX="376.0" layoutY="144.0" text="First Name" />
+            <Font name="System Bold" size="36.0" />
+         </font></Label>
       <Button fx:id="btnLogout" layoutX="255.0" layoutY="252.0" mnemonicParsing="false" onAction="#btnLogoutOnAction" style="-fx-background-color: DDAED3;" text="Log Out" />
    </children>
 </AnchorPane>
