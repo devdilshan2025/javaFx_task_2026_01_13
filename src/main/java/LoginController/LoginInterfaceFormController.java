@@ -74,7 +74,7 @@ public class LoginInterfaceFormController {
         // Get first name
         String firstName = getFirstNameByEmail(email);
 
-        // Load dashboard ONCE (CORRECT WAY)
+        // Load dashboard ONCE
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/view/Dashboard_form.fxml")
@@ -130,14 +130,10 @@ public class LoginInterfaceFormController {
 
     public String getFirstNameByEmail(String email) {
 
-        String sql = "SELECT first_name FROM users WHERE email = ?";
 
-        try (
-                Connection con = DBConnection.getInstance().getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)
-        ) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
+
+        try {
+               ResultSet rs = loginService.getFirstNameByEmail(email);
 
             if (rs.next()) {
                 return rs.getString("first_name");
